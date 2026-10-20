@@ -3,154 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portale Verbali di Sopralluogo - GitHub Pages</title>
+  <title>Portale Verbali di Sopralluogo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
-
-  <!-- LOGIN CONTAINER -->
-  <div id="login-section" class="flex items-center justify-center min-h-screen px-4">
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-slate-200">
-      <div class="text-center mb-6">
-        <i class="fa-solid fa-helmet-safety text-emerald-600 text-4xl mb-2"></i>
-        <h1 class="text-xl font-bold text-slate-900">Portale Verbali Ambientali</h1>
-        <p class="text-xs text-slate-500 mt-1">Accedi con le credenziali assegnate alla tua società</p>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen p-6">
+  <div class="max-w-4xl mx-auto">
+    <header class="bg-slate-900 text-white p-6 rounded-xl shadow-md mb-6 flex justify-between items-center">
+      <div>
+        <h1 class="text-xl font-bold">Portale Verbali Ambientali</h1>
+        <p class="text-xs text-slate-400">Archivio e Gestione Sopralluoghi</p>
       </div>
-      <form onsubmit="handleLogin(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Email Società</label>
-          <input type="email" id="login-email" required class="w-full border border-slate-300 rounded p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Password</label>
-          <input type="password" id="login-password" required class="w-full border border-slate-300 rounded p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-        </div>
-        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-medium py-2.5 rounded text-sm transition shadow">
-          Accedi al Portale
-        </button>
-      </form>
-      <div id="login-error" class="text-red-600 text-xs mt-3 text-center hidden"></div>
+      <a href="verbale.html" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-medium flex items-center gap-2">
+        <i class="fa-solid fa-plus"></i> Nuovo Verbale
+      </a>
+    </header>
+
+    <div class="bg-white rounded-xl shadow-md p-6 border border-slate-200">
+      <h2 class="text-md font-bold text-slate-800 mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-folder-open text-emerald-600"></i> Verbali Archiviati in Cloud
+      </h2>
+      <div id="verbali-list" class="space-y-2">
+        <p class="text-xs text-slate-500">Caricamento elenco in corso...</p>
+      </div>
     </div>
   </div>
 
-  <!-- DASHBOARD CONTAINER (Nascosto finché non si effettua il login) -->
-  <div id="dashboard-section" class="hidden flex-grow">
-    <header class="bg-slate-900 text-white shadow-md">
-      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-          <i class="fa-solid fa-folder-open text-emerald-400 text-xl"></i>
-          <div>
-            <h2 class="font-bold text-sm" id="user-company-display">Società</h2>
-            <p class="text-[10px] text-slate-400">Archivio Verbali di Sopralluogo</p>
-          </div>
-        </div>
-        <button onclick="handleLogout()" class="bg-red-900/40 hover:bg-red-800/60 text-red-200 border border-red-700 px-3 py-1.5 rounded text-xs flex items-center gap-2 transition">
-          <i class="fa-solid fa-right-from-bracket">}</i> Esci
-        </button>
-      </div>
-    </header>
-
-    <main class="max-w-5xl mx-auto my-8 px-4">
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-6 mb-6">
-        <h3 class="text-md font-bold text-slate-800 mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-plus-circle text-emerald-600"></i> Crea o Compila Nuovo Verbale
-        </h3>
-        <p class="text-xs text-slate-600 mb-4">Accedi al modulo ufficiale di sopralluogo ambientale per registrare i dati direttamente nel cloud aziendale.</p>
-        <a href="verbale.html" class="inline-block bg-emerald-700 hover:bg-emerald-600 text-white font-medium px-4 py-2 rounded text-sm shadow transition">
-          <i class="fa-solid fa-file-pen mr-2"></i> Apri Modulo Verbale
-        </a>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-6">
-        <h3 class="text-md font-bold text-slate-800 mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-box-archive text-emerald-600"></i> Verbali Archiviati nel Cloud
-        </h3>
-        <div id="verbali-list" class="space-y-2 text-sm text-slate-600">
-          <p class="text-xs italic text-slate-400">Caricamento verbali in corso...</p>
-        </div>
-      </div>
-    </main>
-  </div>
-
   <script>
-    // INSERISCI QUI LA TUA CONFIGURAZIONE FIREBASE
     const firebaseConfig = {
-      apiKey: "TUA_API_KEY",
-      authDomain: "TUO_PROGETTO.firebaseapp.com",
-      databaseURL: "https://TUO_PROGETTO-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "TUO_PROGETTO",
-      storageBucket: "TUO_PROGETTO.appspot.com",
-      messagingSenderId: "TUO_SENDER_ID",
-      appId: "TUO_APP_ID"
+      databaseURL: "https://console.firebase.google.com/project/vstvg-1f2f6/database/vstvg-1f2f6-default-rtdb/data/~2F"
     };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Gestione Autenticazione
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('dashboard-section').classList.remove('hidden');
-        document.getElementById('user-company-display').innerText = user.email;
-        loadArchivedVerbali(user.email.replace(/[.#$/[\]]/g, "_"));
-      } else {
-        document.getElementById('login-section').classList.remove('hidden');
-        document.getElementById('dashboard-section').classList.add('hidden');
-      }
-    });
-
-    function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value;
-      const pass = document.getElementById('login-password').value;
-      const errBox = document.getElementById('login-error');
+    db.ref('verbali').on('value', (snapshot) => {
+      const container = document.getElementById('verbali-list');
+      container.innerHTML = '';
+      const data = snapshot.val();
       
-      auth.signInWithEmailAndPassword(email, pass)
-        .catch((error) => {
-          errBox.innerText = "Errore di accesso: " + error.message;
-          errBox.classList.remove('hidden');
-        });
-    }
+      if (!data) {
+        container.innerHTML = '<p class="text-xs text-slate-500">Nessun verbale presente nel cloud.</p>';
+        return;
+      }
 
-    function handleLogout() {
-      auth.signOut();
-    }
-
-    function loadArchivedVerbali(companyKey) {
-      const listContainer = document.getElementById('verbali-list');
-      db.ref('verbali/').on('value', (snapshot) => {
-        const data = snapshot.val();
-        listContainer.innerHTML = '';
-        if (!data) {
-          listContainer.innerHTML = '<p class="text-xs text-slate-400 italic">Nessun verbale archiviato.</p>';
-          return;
-        }
-
-        let html = '<ul class="divide-y divide-slate-100">';
-        for (let key in data) {
-          const item = data[key];
-          html += `
-            <li class="py-3 flex justify-between items-center text-xs">
-              <div>
-                <strong class="text-slate-900">${key}</strong> 
-                <span class="text-slate-500 block">Cantiere: ${item.cantiere || 'N.D.'} | Area: ${item.area || 'N.D.'}</span>
-              </div>
-              <span class="bg-emerald-50 text-emerald-800 px-2 py-1 rounded border border-emerald-200 font-medium">Archiviato</span>
-            </li>
-          `;
-        }
-        html += '</ul>';
-        listContainer.innerHTML = html;
+      Object.keys(data).forEach(key => {
+        const item = data[key];
+        const dateStr = item.datetime ? new Date(item.datetime).toLocaleString() : 'Data non specificata';
+        
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center p-3 bg-slate-50 border border-slate-200 rounded hover:bg-slate-100 transition";
+        div.innerHTML = `
+          <div>
+            <div class="font-bold text-sm text-slate-800">${key}</div>
+            <div class="text-xs text-slate-500">Cantiere: ${item.cantiere || 'N.D.'} | Area: ${item.area || 'N.D.'} | Data: ${dateStr}</div>
+          </div>
+          <a href="verbale.html?load=${encodeURIComponent(key)}" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded text-xs">
+            <i class="fa-solid fa-eye"></i> Apri / Modifica
+          </a>
+        `;
+        container.appendChild(div);
       });
-    }
+    });
   </script>
 </body>
 </html>
